@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>EZ-job</title>
-    <link type="text/css" href="main.css">
+    <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="main.js"></script>
@@ -13,7 +13,8 @@
         <input v-model="q"><button v-on:click="query">go</button>
         <div v-for="r in results">
             <h3><a v-bind:href="r.url" target="_blank">{{r.jobtitle}}</a></h3>
-            <h4>{{r.company}} - {{r.formattedLocationFull}} - {{r.formattedRelativeTime}} ({{companies[r.company]}} offers)</h4>
+            <h4>{{r.company}} - {{r.formattedLocationFull}} - {{r.formattedRelativeTime}}</h4>
+            <h4><span v-if="companies[r.company]">{{companies[r.company]}} offers (query)</span><span v-if="companiesFull[r.company]"> - {{companiesFull[r.company]}} offers (total)</span></h4>
         </div>
     </div>
 </body>
