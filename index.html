@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EZ-job</title>
+    <link type="text/css" href="main.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input v-model="q"><button v-on:click="query">go</button>
+        <div v-for="r in results">
+            <h3><a v-bind:href="r.url" target="_blank">{{r.jobtitle}}</a></h3>
+            <h4>{{r.company}} - {{r.formattedLocationFull}} - {{r.formattedRelativeTime}} ({{companies[r.company]}} offers)</h4>
+        </div>
+    </div>
+</body>
+</html>
