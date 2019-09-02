@@ -10,6 +10,8 @@ let app = {
   el: '#app',
   data: {
     q: 'ingénieur informatique',
+    co : 'fr',
+    l:'Nantes (44)',
     results: [],
     companies:{},
     companiesFull:{},
@@ -29,12 +31,12 @@ let app = {
           'userip': '1.2.3.4',
           'useragent': 'Mozilla//4.0(Firefox)',
           'jt': 'fulltime',
-          'co': 'fr',
+          'co': app.co,
           'limit': 10,
           'start': page * 10,
           'filter': 'false',
           'q': app.q,
-          'l': 'Nantes+(44)',
+          'l': app.l,
           'publisher': '1303284387458115',
         },
         success: (res) => {
