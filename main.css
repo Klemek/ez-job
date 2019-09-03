@@ -1,7 +1,49 @@
+*{
+    box-sizing: :border-box;
+    font-family: Verdana;
+    color:#424242;
+}
+
+body{
+    padding: 1em;
+}
+
+main {
+  max-width: 38rem;
+  padding: 2rem;
+  margin: auto;
+}
+
 h3, h4 {
-    margin:0
+    margin:0;
 }
 
 h3{
     margin-top:.5em;
+}
+
+h4{
+    font-weight:normal;
+    margin-left:1em;
+}
+
+a{
+    text-decoration:none;
+    color:#1565C0;
+}
+
+a:hover{
+    color:#2196F3;
+}
+
+.error{
+    color:#f44336;
+}
+
+input{
+    margin-right: 1em;
+}
+
+button{
+    width:6em;
 }
