@@ -11,7 +11,8 @@
 <body>
     <div id="app">
         <input v-model="q"><input v-model="co"><input v-model="l"><button v-on:click="query">go</button>
-        <h4>{{results.length}} results</h4>
+        <h4>{{results.length}} results - {{requests}} requests</h4>
+        <h4 style="color:red" v-if="error">{{error}}</h4>
         <div v-for="r in results">
             <h3><a v-bind:href="r.url" target="_blank">{{r.jobtitle}}</a></h3>
             <h4>{{r.company}} - {{r.formattedLocationFull}} - {{r.formattedRelativeTime}}</h4>
