@@ -55,6 +55,11 @@ a:hover{
 
 input{
     margin-right: 1em;
+    width: 8em;
+}
+
+input.wide{
+    width: 18em;
 }
 
 button{
