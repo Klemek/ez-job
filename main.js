@@ -99,7 +99,7 @@ let app = {
           app.companiesFull[name] = res.totalResults;
           if(app.companiesQueried()){
             app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
-            Cookies.set('companiesFull', app.companiesFull);
+            Cookies.set('companiesFull', app.companiesFull, {expires: 2});
           }
           app['$forceUpdate']();
         },
