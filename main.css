@@ -4,18 +4,31 @@
     color:#424242;
 }
 
+html,body{
+    margin:0;
+    padding:0;
+    height:100vh;
+}
+
 body{
-    padding: 1em;
+    background-color:#F5F5F5;
 }
 
 main {
   max-width: 38rem;
   padding: 2rem;
   margin: auto;
+  background-color:#EEEEEE;
+  min-height:100%;
 }
 
 h3, h4 {
     margin:0;
+    text-overflow: ellipsis;
+    max-width:calc(100%-2rem);
+    overflow: hidden;
+    white-space:nowrap;
+    word-wrap: break-word;
 }
 
 h3{
