@@ -29,6 +29,7 @@ let app = {
       $.ajax({
         type: 'GET',
         url: 'http://api.indeed.com/ads/apisearch',
+        dataType: 'text',
         data: {
           'v': '2',
           'format': 'json',
@@ -44,6 +45,12 @@ let app = {
           'publisher': '1303284387458115'
         },
         success: (res) => {
+          try {
+              res = JSON.parse(str);
+          } catch (e) {
+              app.error = res;
+              return false;
+          }
           app.requests++;
           app.results.push(...res.results);
           res.results.forEach(r=>{
@@ -69,6 +76,7 @@ let app = {
       $.ajax({
         type: 'GET',
         url: 'http://api.indeed.com/ads/apisearch',
+        dataType: 'text',
         data: {
           'v': '2',
           'format': 'json',
@@ -81,6 +89,12 @@ let app = {
           'publisher': '1303284387458115'
         },
         success: (res) => {
+          try {
+              res = JSON.parse(str);
+          } catch (e) {
+              app.error = res;
+              return false;
+          }
           app.requests++;
           app.companiesFull[name] = res.totalResults;
           if(Object.keys(app.companies).length === Object.keys(app.companiesFull).length){
