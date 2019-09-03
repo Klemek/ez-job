@@ -9,6 +9,8 @@ $.ajaxPrefilter(function (options) {
 let app = {
   el: '#app',
   data: {
+    error: null,
+    requests: 0,
     q: 'ingénieur informatique',
     co : 'fr',
     l:'Nantes (44)',
@@ -21,6 +23,8 @@ let app = {
       if (page === 0) {
         app.results = [];
         app.companies = {};
+        app.requests = 0;
+        app.error = null;
       }
       $.ajax({
         type: 'GET',
@@ -40,6 +44,7 @@ let app = {
           'publisher': '1303284387458115',
         },
         success: (res) => {
+          app.requests++;
           app.results.push(...res.results);
           res.results.forEach(r=>{
             app.companies[r.company] = (app.companies[r.company] || 0) + 1;
@@ -53,6 +58,10 @@ let app = {
               app.queryCompany(name);
             });
           }
+        },
+        error: (error, text) => {
+          console.error(error);
+          app.error = text;
         }
       });
     },
@@ -72,6 +81,7 @@ let app = {
           'publisher': '1303284387458115',
         },
         success: (res) => {
+          app.requests++;
           app.companiesFull[name] = res.totalResults;
           if(Object.keys(app.companies).length === Object.keys(app.companiesFull).length){
             app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
