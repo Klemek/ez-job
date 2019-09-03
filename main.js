@@ -41,7 +41,7 @@ let app = {
           'filter': 'false',
           'q': app.q,
           'l': app.l,
-          'publisher': '1303284387458115',
+          'publisher': '1303284387458115'
         },
         success: (res) => {
           app.requests++;
@@ -78,7 +78,7 @@ let app = {
           'filter': 'false',
           'limit': 1,
           'q': name,
-          'publisher': '1303284387458115',
+          'publisher': '1303284387458115'
         },
         success: (res) => {
           app.requests++;
