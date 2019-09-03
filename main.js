@@ -16,7 +16,7 @@ let app = {
     l:'Nantes (44)',
     results: [],
     companies:{},
-    companiesFull: Cookies.getJSON('companiesFull'),
+    companiesFull: Cookies.getJSON('companiesFull') || {},
   },
   methods: {
     query: (event, page = 0) => {
