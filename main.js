@@ -88,7 +88,6 @@ let app = {
           }
           app['$forceUpdate']();
         },
-        ,
         error: (error, text) => {
           console.error(error);
           app.error = text;
