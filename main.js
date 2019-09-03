@@ -52,10 +52,15 @@ let app = {
           if (res.end < res.totalResults) {
             app.query(null, page + 1);
           }else{
-            app.results.sort((r1,r2) => app.companies[r1.company] - app.companies[r2.company]);
-            Object.keys(app.companies).forEach(name => {
-              app.queryCompany(name);
-            });
+            if(app.companiesQueried()){
+              app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
+            }else{
+              app.results.sort((r1,r2) => app.companies[r1.company] - app.companies[r2.company]);
+              Object.keys(app.companies).forEach(name => {
+                app.queryCompany(name);
+              });
+            }
+            
           }
         },
         error: (error) => {
@@ -63,6 +68,14 @@ let app = {
           app.error = error.statusText;
         }
       });
+    },
+    companiesQueried: () => {
+      let res = true;
+      Object.keys(app.companies).forEach(name => {
+        if(!app.companiesFull[name])
+          res = false;
+      });
+      return res;
     },
     queryCompany:(name)=>{
       if(app.companiesFull[name])
@@ -84,7 +97,7 @@ let app = {
         success: (res) => {
           app.requests++;
           app.companiesFull[name] = res.totalResults;
-          if(Object.keys(app.companies).length === Object.keys(app.companiesFull).length){
+          if(app.companiesQueried()){
             app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
             Cookies.set('companiesFull', app.companiesFull);
           }
