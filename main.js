@@ -16,7 +16,7 @@ let app = {
     l:'Nantes (44)',
     results: [],
     companies:{},
-    companiesFull:{},
+    companiesFull: Cookies.getJSON('companiesFull'),
   },
   methods: {
     query: (event, page = 0) => {
@@ -60,7 +60,6 @@ let app = {
             app.query(null, page + 1);
           }else{
             app.results.sort((r1,r2) => app.companies[r1.company] - app.companies[r2.company]);
-            app.companiesFull = {};
             Object.keys(app.companies).forEach(name => {
               app.queryCompany(name);
             });
@@ -73,6 +72,8 @@ let app = {
       });
     },
     queryCompany:(name)=>{
+      if(app.companiesFull[name])
+        return;
       $.ajax({
         type: 'GET',
         url: 'http://api.indeed.com/ads/apisearch',
@@ -99,6 +100,7 @@ let app = {
           app.companiesFull[name] = res.totalResults;
           if(Object.keys(app.companies).length === Object.keys(app.companiesFull).length){
             app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
+            Cookies.set('companiesFull', app.companiesFull);
           }
           app['$forceUpdate']();
         },
