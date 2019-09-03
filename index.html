@@ -9,7 +9,7 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <div id="app">
+    <main id="app">
         <input v-model="q"><input v-model="co"><input v-model="l"><button v-on:click="query">go</button>
         <h4>{{results.length}} results - {{requests}} requests</h4>
         <h4 style="color:red" v-if="error">{{error}}</h4>
@@ -18,6 +18,6 @@
             <h4>{{r.company}} - {{r.formattedLocationFull}} - {{r.formattedRelativeTime}}</h4>
             <h4><span v-if="companies[r.company]">{{companies[r.company]}} offers (query)</span><span v-if="companiesFull[r.company]"> - {{companiesFull[r.company]}} offers (total)</span></h4>
         </div>
-    </div>
+    </main>
 </body>
 </html>
