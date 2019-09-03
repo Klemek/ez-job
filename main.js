@@ -66,9 +66,9 @@ let app = {
             });
           }
         },
-        error: (error, text) => {
+        error: (error) => {
           console.error(error);
-          app.error = text;
+          app.error = error.statusText;
         }
       });
     },
@@ -102,9 +102,9 @@ let app = {
           }
           app['$forceUpdate']();
         },
-        error: (error, text) => {
+        error: (error) => {
           console.error(error);
-          app.error = text;
+          app.error = error.statusText;
         }
       });
     }
