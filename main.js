@@ -87,6 +87,11 @@ let app = {
             app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
           }
           app['$forceUpdate']();
+        },
+        ,
+        error: (error, text) => {
+          console.error(error);
+          app.error = text;
         }
       });
     }
