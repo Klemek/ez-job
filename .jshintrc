@@ -19,6 +19,7 @@
   "jquery": true,
   "devel": true,
   "globals": {
+    "Cookies": false,
     "Vue": false
   }
 }

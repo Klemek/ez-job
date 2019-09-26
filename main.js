@@ -1,10 +1,30 @@
-$.ajaxPrefilter(function (options) {
-  if (options.crossDomain && jQuery.support.cors) {
-    const http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
-    options.url = http + '//cors-anywhere.herokuapp.com/' + options.url;
-    options.data = options.data.replace(/%2B/gm, '+');
+const utils = {
+  get: (url, data, proxy = false) => {
+    return new Promise((resolve, reject) => {
+      if (data && Object.keys(data).length) {
+        url += '?' + Object.keys(data)
+          .map(k => k + '=' + encodeURIComponent(data[k]))
+          .join('&')
+          .replace(/%20/g, '+');
+      }
+      const xhr = new XMLHttpRequest();
+      if (proxy) {
+        const http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+        url = http + '//cors-anywhere.herokuapp.com/' + url;
+      }
+      xhr.open('GET', url);
+      xhr.onload = () => {
+        try {
+          resolve(JSON.parse(xhr.responseText));
+        } catch (ignored) {
+          resolve(xhr.responseText);
+        }
+      };
+      xhr.onerror = () => reject(xhr);
+      xhr.send();
+    });
   }
-});
+};
 
 let app = {
   el: '#app',
@@ -26,47 +46,41 @@ let app = {
         app.requests = 0;
         app.error = null;
       }
-      $.ajax({
-        type: 'GET',
-        url: 'http://api.indeed.com/ads/apisearch',
-        data: {
-          'v': '2',
-          'format': 'json',
-          'userip': '1.2.3.4',
-          'useragent': 'Mozilla//4.0(Firefox)',
-          'jt': 'fulltime',
-          'co': app.co,
-          'limit': 25,
-          'start': page * 25,
-          'filter': 'false',
-          'q': app.q,
-          'l': app.l,
-          'publisher': '1303284387458115'
-        },
-        success: (res) => {
-          app.requests++;
-          app.results.push(...res.results);
-          res.results.forEach(r=>{
-            app.companies[r.company] = (app.companies[r.company] || 0) + 1;
-          });
-          if (res.end < res.totalResults) {
-            app.query(null, page + 1);
-          }else{
-            if(app.companiesQueried()){
-              app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
-            }else{
-              app.results.sort((r1,r2) => app.companies[r1.company] - app.companies[r2.company]);
-              Object.keys(app.companies).forEach(name => {
-                app.queryCompany(name);
-              });
-            }
-            
+      utils.get('http://api.indeed.com/ads/apisearch', {
+        'v': '2',
+        'format': 'json',
+        'userip': '1.2.3.4',
+        'useragent': 'Mozilla//4.0(Firefox)',
+        'jt': 'fulltime',
+        'co': app.co,
+        'limit': 25,
+        'start': page * 25,
+        'filter': 'false',
+        'q': app.q,
+        'l': app.l,
+        'publisher': '1303284387458115'
+      }, true).then((res) => {
+        app.requests++;
+        app.results.push(...res.results);
+        res.results.forEach(r => {
+          app.companies[r.company] = (app.companies[r.company] || 0) + 1;
+        });
+        if (res.end < res.totalResults) {
+          app.query(null, page + 1);
+        } else {
+          if (app.companiesQueried()) {
+            app.results.sort((r1, r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
+          } else {
+            app.results.sort((r1, r2) => app.companies[r1.company] - app.companies[r2.company]);
+            Object.keys(app.companies).forEach(name => {
+              app.queryCompany(name);
+            });
           }
-        },
-        error: (error) => {
-          console.error(error);
-          app.error = error.statusText;
+
         }
+      }).catch((xhr) => {
+        console.error(xhr);
+        app.error = xhr.statusText;
       });
     },
     companiesQueried: () => {
@@ -80,33 +94,27 @@ let app = {
     queryCompany:(name)=>{
       if(app.companiesFull[name])
         return;
-      $.ajax({
-        type: 'GET',
-        url: 'http://api.indeed.com/ads/apisearch',
-        data: {
-          'v': '2',
-          'format': 'json',
-          'userip': '1.2.3.4',
-          'useragent': 'Mozilla//4.0(Firefox)',
-          'co': app.co,
-          'filter': 'false',
-          'limit': 1,
-          'q': name,
-          'publisher': '1303284387458115'
-        },
-        success: (res) => {
-          app.requests++;
-          app.companiesFull[name] = res.totalResults;
-          if(app.companiesQueried()){
-            app.results.sort((r1,r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
-            Cookies.set('companiesFull', app.companiesFull, {expires: 2});
-          }
-          app['$forceUpdate']();
-        },
-        error: (error) => {
-          console.error(error);
-          app.error = error.statusText;
+      utils.get('http://api.indeed.com/ads/apisearch', {
+        'v': '2',
+        'format': 'json',
+        'userip': '1.2.3.4',
+        'useragent': 'Mozilla//4.0(Firefox)',
+        'co': app.co,
+        'filter': 'false',
+        'limit': 1,
+        'q': name,
+        'publisher': '1303284387458115'
+      }, true).then((res) => {
+        app.requests++;
+        app.companiesFull[name] = res.totalResults;
+        if (app.companiesQueried()) {
+          app.results.sort((r1, r2) => app.companiesFull[r1.company] - app.companiesFull[r2.company]);
+          Cookies.set('companiesFull', app.companiesFull, {expires: 2});
         }
+        app['$forceUpdate']();
+      }).catch((xhr) => {
+        console.error(xhr);
+        app.error = xhr.statusText;
       });
     }
   },
@@ -115,6 +123,6 @@ let app = {
   },
 };
 
-$(document).ready(function () {
+window.onload = () => {
   app = new Vue(app);
-});
+};
