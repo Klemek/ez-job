@@ -10,7 +10,7 @@ const utils = {
       const xhr = new XMLHttpRequest();
       if (proxy) {
         const http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
-        url = http + '//cors-anywhere.herokuapp.com/' + url;
+        url = http + '//crossorigin.me/' + url;
       }
       xhr.open('GET', url);
       xhr.onload = () => {
