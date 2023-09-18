@@ -10,7 +10,7 @@ const utils = {
       const xhr = new XMLHttpRequest();
       if (proxy) {
         const http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
-        url = http + '//crossorigin.me/' + url;
+        url = http + '//cors.klemek.fr/' + url;
       }
       xhr.open('GET', url);
       xhr.onload = () => {
